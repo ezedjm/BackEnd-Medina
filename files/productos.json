@@ -106,5 +106,14 @@
     "thumbnail": "imagen12.jpg",
     "code": "012",
     "stock": 9999
+  },
+  {
+    "id": 14,
+    "title": "Producto14",
+    "description": "Descripción14",
+    "price": 10000,
+    "thumbnail": "imagen14.jpg",
+    "code": "014",
+    "stock": 9999
   }
 ]

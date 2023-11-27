@@ -32,19 +32,19 @@ class ProductManager {
     fs.writeFileSync(this.path, data);
   }
 
-  // Chequeo campos vacíos
+  
+  // Metodo para agregar Producto
   addProduct(dataProducto) {
+    //Chequeo campos vacíos
     if (!dataProducto.title || !dataProducto.description || !dataProducto.price || !dataProducto.thumbnail || !dataProducto.code || !dataProducto.stock) {
       console.error("Todos los campos son obligatorios.");
       return;
     }
-
     // Chequeo que no se repitan los códigos de producto
     if (this.products.some((product) => product.code === dataProducto.code)) {
       console.error("El código del producto ya existe.");
       return;
     }
-
     // Genero producto como constante
     const product = {
       id: this.autoIncrId++,
@@ -55,10 +55,11 @@ class ProductManager {
       code: dataProducto.code,
       stock: dataProducto.stock,
     };
-
+    //Pusheo y guardo
     this.products.push(product);
     this.saveProducts();
   }
+
 
   // Método get de todo con limit agregado
   getProducts(limit) {
