@@ -1,0 +1,18 @@
+<div>
+    <h1 class="titulos">LISTADO DE PRODUCTOS</h1>
+    <ul>
+        {{#each productos}}
+        <section class="claseProducto">
+            <li><strong>Producto: </strong> {{title}} </li>
+            <li><strong>Detalle: </strong> {{description}}</li>
+            <li><strong>Imagen: </strong> {{thumbnail}}</li>
+            <li><strong>Precio: $</strong> {{price}}</li>
+            <li><strong>Stock: </strong> {{stock}} u.</li>
+        </section>
+        <br>
+        {{/each}}
+    </ul>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

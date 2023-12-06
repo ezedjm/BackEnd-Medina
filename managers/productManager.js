@@ -23,6 +23,7 @@ class ProductManager {
     } catch (error) {
       this.products = []
       console.log('Error en la carga.');
+      console.log(error);
     }
   }
 
@@ -60,6 +61,10 @@ class ProductManager {
     this.saveProducts();
   }
 
+// get All para handlebars
+getAllProducts() {
+    return this.products;
+}
 
   // Método get de todo con limit agregado
   getProducts(limit) {
