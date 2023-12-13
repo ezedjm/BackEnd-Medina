@@ -1,17 +1,17 @@
 // CLIENTE
-import { io } from "socket.io-client";
+//import { io } from "socket.io-client";
 
 
 
 const socket = io();
 
-// escucho evento del post/delete
-socket.on("actualizarLista", () => {
 
-  console.log("Recibido evento para actualizar la lista");
+// escucho evento del post/delete
+socket.on("actualizarLista", (newProduct) => {
+  console.log("Nuevo producto agregado:", newProduct);
 
   // solicitud fetch para obtener la nueva lista de productos
-  fetch("/api/products")
+  fetch("/realtimeproducts")
     .then(response => response.json())
     .then(data => {
       // manipulo DOM para actualizar lista
@@ -26,7 +26,7 @@ function actualizarListaEnVista(nuevaLista) {
   // reemplazo el contenido de lista vieja con la nueva lista
   const listaProductos = document.getElementById("listaProductos");
   // limpio lista vieja
-  listaProductos.innerHTML = ""; 
+  listaProductos.innerHTML = "";
 
   nuevaLista.forEach((producto) => {
     const nuevoProducto = document.createElement("li");
@@ -39,4 +39,6 @@ function actualizarListaEnVista(nuevaLista) {
     `;
     listaProductos.appendChild(nuevoProducto);
   });
-}
+};
+
+

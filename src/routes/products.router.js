@@ -4,14 +4,16 @@ import ProductManager from '../../managers/productManager.js';
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import http from 'http';
-import io from "socket.io-client";
+//import io from "socket.io-client";//esto falla si lo cambio o lo saco, no me toma el io
 
 
-const createProductsRouter = (io) => {
-    //const socketServer = io();
-const router = Router();
+//const createProductsRouter = (io) => {
+//const socketServer = io();  
+const createProductsRouter = (io, productsManagerInst) => {
 
-const productsManagerInst = new ProductManager('./files/productos.json');
+
+  const router = Router();
+//const productsManagerInst = new ProductManager('./files/productos.json');
 
 
 // GET todos los productos
@@ -42,8 +44,15 @@ router.post("/", async (req, res) => {
 
         // emitir evento de nuevo producto
         //req.app.get('io').emit("productoNuevo", newProduct);
+        try {
+            io.emit("actualizarLista", newProduct);
+            console.log(`emito senial de actualizarLista`);
+        } catch (error) {
+            console.log(`error: ${error}`);
+        }
+        
         console.log(`agrego ${JSON.stringify(newProduct)}`);
-        socketServer.emit("actualizarLista");
+        
 
         res.send({
             status: "success",
@@ -73,7 +82,7 @@ router.delete("/:pid", async (req, res) => {
         productsManagerInst.deleteProduct(pid);
 
         // emitir evento de producto eliminado
-        socketServer.emit("actualizarLista");
+        io.emit("actualizarLista");
 
         res.send({
             status: "success",

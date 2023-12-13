@@ -1,19 +1,31 @@
-<div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../public/js/realTimeProducts.js"></script>
+</head>
+
+<body>
+
     <h1 class="titulos">LISTADO DE PRODUCTOS EN TIEMPO REAL</h1>
     <ul class="listaProductos">
         {{#each productos}}
-            <section class="claseProductoRealTime">
-                <li><strong>Producto: </strong> {{title}} </li>
-                <li><strong>Detalle: </strong> {{description}}</li>
-                <li><strong>Imagen: </strong> {{thumbnail}}</li>
-                <li><strong>Precio: $</strong> {{price}}</li>
-                <li><strong>Stock: </strong> {{stock}} u.</li>
-            </section>
-            <br>
+        <section class="claseProductoRealTime">
+            <li><strong>Producto: </strong> {{title}} </li>
+            <li><strong>Detalle: </strong> {{description}}</li>
+            <li><strong>Imagen: </strong> {{thumbnail}}</li>
+            <li><strong>Precio: $</strong> {{price}}</li>
+            <li><strong>Stock: </strong> {{stock}} u.</li>
+        </section>
+        <br>
         {{/each}}
     </ul>
-</div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/realTimeProducts.js"></script>
+</body>
 
+</html>

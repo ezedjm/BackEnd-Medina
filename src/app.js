@@ -9,68 +9,73 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import http from 'http';
 
+try {
+  // inicializo express en mi app
+  const app = express();
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }));
 
-// inicializo express en mi app
-const app = express();
-const PORT = 8080;
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
+  // Sirvo la carpeta public de archivos estaticos
+  app.use(express.static(`${__dirname}/public`));
 
-// Sirvo la carpeta public de archivos estaticos
-app.use(express.static(`${__dirname}/public`));
-
-// creo e inicio servidor HTTP
-const servidorHTTP = app.listen(PORT, () => {
-  console.log(`Servidor funcionando en el puerto: ${PORT}`);
-});
-/*//const servidorHTTP = http.createServer(app);
-// Inicio el servidor HTTP
-servidorHTTP.listen(PORT, () => {
-  console.log(`Servidor HTTP funcionando en el puerto: ${PORT}`);
-});*/
-
-
-// defino el endpoint de los products y le aplico su router, pasando el objeto IO
-app.use('/api/products', productsRouter);
+  // creo e inicio servidor HTTP
+  const servidorHTTP = http.createServer(app);
+  /*const servidorHTTP = app.listen(PORT, () => {
+    console.log(`Servidor funcionando en el puerto: ${PORT}`);
+  });*/
 
   //creo e inicio servidor SOCKET
-  const servidorSocket = new Server(servidorHTTP);
+  const io = new Server(servidorHTTP);
   //console.log(`Servidor SOCKET creado`);
 
-  // adjunto io a la aplicación para que esté disponible en las solicitudes
- // app.set('io', servidorSocket);
+  // creo una instancia de ProductManager
+  const productsManagerInst = new ProductManager('./files/productos.json');
+
+  //inicio motor handlebars
+  app.engine("handlebars", handlebars.engine());
+  //seteo las vistas de handlebars
+  app.set("views", __dirname + "/views");
+  app.set("view engine", "handlebars");
+
+
+
+  // defino el endpoint de los products y le aplico su router, pasando el objeto IO
+  //app.use('/api/products', productsRouter);
+  app.use('/api/products', productsRouter(io, productsManagerInst));
 
   // defino endpoint de REAL TIME para mostrar productos con Web Socket IO 
-//app.use('/realtimeproducts', realTimeRouterWSIO(servidorSocket));
-app.use ('/realtimeproducts', realTimeRouterWSIO);
+  //app.use('/realtimeproducts', realTimeRouterWSIO(io));
+  //realTimeRouterWSIO.io(io);
+  app.use('/realtimeproducts', realTimeRouterWSIO(io, productsManagerInst));
+
+  // defino el endpoint de los carts y le aplico su router
+  app.use('/api/carts', cartsRouter);
+
+  // defino endpoint de handlebars para mostrar los productos en /
+  app.use('/homehandlebars', handlebarsRouter);
 
 
 
-
-//inicio motor handlebars
-app.engine("handlebars", handlebars.engine());
-//seteo las vistas de handlebars
-app.set("views", __dirname + "/views");
-app.set("view engine", "handlebars");
-
-
-
-// defino el endpoint de los carts y le aplico su router
-app.use('/api/carts', cartsRouter);
-
-// defino endpoint de handlebars para mostrar los productos en /
-app.use('/homehandlebars', handlebarsRouter);
-
-
-
-// manejo de eventos de Web Socket
-  servidorSocket.on("connection", socket => {
+  // manejo de eventos de Web Socket
+  io.on("connection", (socket) => {
     console.log('Cliente conectado');
 
-    socket.on("disconnection", () => {
+    socket.on("disconnect", () => {
       console.log('Cliente desconectado');
     });
+
     /*socket.on("actualizarLista", () => {
       location.reload();
     });*/
   });
+
+// Iniciar el servidor
+const PORT = 8080;
+servidorHTTP.listen(PORT, () => {
+  console.log(`Servidor funcionando en el puerto: ${PORT}`);
+});
+
+
+} catch (error) {
+  console.error('Error al iniciar el servidor:', error);
+}

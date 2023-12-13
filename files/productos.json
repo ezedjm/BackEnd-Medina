@@ -25,5 +25,14 @@
     "thumbnail": "imagen4.jpg",
     "code": "004",
     "stock": 9999
+  },
+  {
+    "id": 5,
+    "title": "Producto5",
+    "description": "Descripción5",
+    "price": 100,
+    "thumbnail": "imagen5.jpg",
+    "code": "005",
+    "stock": 9999
   }
 ]
